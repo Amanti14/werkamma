@@ -297,11 +297,11 @@
           <div>
             <h2 id="acctName">Guest</h2>
             <p class="ph" id="acctHandle">Not signed in via Telegram</p>
-            <span class="tier">Gold Member</span>
+            <span class="tier" id="tierBadge">Member</span>
           </div>
         </div>
         <div class="tier-track">
-          <div class="lbls"><span id="ptsLbl">248 pts</span><span>Platinum at 1000</span></div>
+          <div class="lbls"><span id="ptsLbl">0 pts</span><span id="nextTierLbl">Silver at 250</span></div>
           <div class="track"><i id="tierFill" style="width:24%"></i></div>
         </div>
         <div class="stats">
@@ -585,10 +585,10 @@ var QS = [
 
 /* ---------- state ---------- */
 var cart = [];
-var wishlist = ["fleur","santal"];
+var wishlist = [];
 var promo = null;
 var lastOrder = null;
-var points = 248;
+var points = 0;
 var searchQ = "";
 var stack = ["home"];
 var currentView = "home";
@@ -596,10 +596,22 @@ var shop = { cat:"all", note:null, band:0, sort:"featured" };
 var quiz = { step:0, answers:[] };
 var detail = { id:null, size:50, qty:1, sample:false };
 var ck = { delivery:"std", method:"Card" };
-var orders = [
-  { id:"YS-84213", date:"Feb 12, 2026", status:"Delivered", items:[{name:"Noir d'Or",size:50,qty:1,price:189},{name:"Discovery vials",size:0,qty:1,price:9}], total:198, delivery:"Standard · Card" },
-  { id:"YS-77109", date:"Jan 3, 2026", status:"Delivered", items:[{name:"Fleur de Minuit",size:30,qty:2,price:204}], total:204, delivery:"Express · Telegram Pay" }
+var orders = [];
+var TIERS = [
+  { name:"Member", min:0 },
+  { name:"Silver Member", min:250 },
+  { name:"Gold Member", min:500 },
+  { name:"Platinum Member", min:1000 }
 ];
+function tierFor(pts){
+  var cur = TIERS[0];
+  for (var i=0;i<TIERS.length;i++) if (pts >= TIERS[i].min) cur = TIERS[i];
+  return cur;
+}
+function nextTier(pts){
+  for (var i=0;i<TIERS.length;i++) if (TIERS[i].min > pts) return TIERS[i];
+  return null;
+}
 
 /* ---------- helpers ---------- */
 function $(s){ return document.querySelector(s); }
@@ -930,8 +942,16 @@ function renderAccount(){
   $("#ptsLbl").textContent = points + " pts";
   $("#ordNum").textContent = orders.length;
   $("#wishNum").textContent = wishlist.length;
-  $("#tierFill").style.width = Math.min(100, points/1000*100) + "%";
+  var tier = tierFor(points), next = nextTier(points);
+  $("#tierBadge").textContent = tier.name;
+  var span = next ? (next.min - tier.min) : 1;
+  var into = next ? (points - tier.min) : span;
+  $("#tierFill").style.width = Math.min(100, into/span*100) + "%";
+  $("#nextTierLbl").textContent = next ? (next.name.replace(" Member","") + " at " + next.min) : "Highest tier reached";
   var h = "";
+  if (!orders.length){
+    h = '<div class="empty" style="padding:28px 20px"><h3 style="font-size:18px">No orders yet</h3><p style="max-width:none">Your purchases will appear here once you place your first order.</p></div>';
+  }
   for (var i=0;i<orders.length;i++){
     var o = orders[i];
     var n = 0, names = [];
