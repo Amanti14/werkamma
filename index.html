@@ -545,6 +545,19 @@ function applyTelegramProfile(){
   paintAvatar("acct", full, tgUser.photo_url);
 }
 
+/* ---------- login persistence ---------- */
+var AUTH_KEY = "ys_signed_in_id";
+function rememberLogin(id){
+  try { localStorage.setItem(AUTH_KEY, String(id)); } catch(e){}
+}
+function forgetLogin(){
+  try { localStorage.removeItem(AUTH_KEY); } catch(e){}
+}
+function wasSignedIn(id){
+  try { return localStorage.getItem(AUTH_KEY) === String(id); } catch(e){ return false; }
+}
+
+
 /* ---------- data ---------- */
 var P = [
   { id:"noir", name:"Noir d'Or", tag:"Black musk, crowned in gold", cat:"men", price:189, img:"images/p-noir.jpg", sizes:[30,50,100], notes:{t:"Bergamot · Pink Pepper",h:"Oud · Saffron",b:"Black Musk · Amber"}, tags:["Oud","Amber","Woody"], rating:4.9, reviews:312, badge:"Bestseller", stock:14, desc:"Our flagship. A midnight accord of Cambodian oud and saffron wrapped in black musk — composed in Grasse, macerated for nine months. The scent of a room that goes quiet when you enter it.", intensity:5, longevity:5 },
@@ -1290,10 +1303,16 @@ var App = {
   enterGate: function(){
     $("#gate").classList.add("hide");
     applyTelegramProfile();
-    if (tgUser) toast("Signed in as " + (tgUser.first_name || "Telegram User") + " ✦");
+    if (tgUser){
+      rememberLogin(tgUser.id);
+      toast("Signed in as " + (tgUser.first_name || "Telegram User") + " ✦");
+    }
   },
   logout: function(){
-    $("#gate").classList.remove("hide");
+    forgetLogin();
+    var g = $("#gate");
+    g.style.display = "";
+    g.classList.remove("hide");
     go("home", true);
   },
   t: toast
@@ -1307,6 +1326,10 @@ window.addEventListener("DOMContentLoaded", function(){
   initTelegramAuth();
   if (tg){
     try { tg.setHeaderColor("#0b0a08"); tg.setBackgroundColor("#0b0a08"); } catch(e){}
+  }
+  if (tgUser && wasSignedIn(tgUser.id)){
+    $("#gate").style.display = "none";
+    applyTelegramProfile();
   }
   setTimeout(function(){ $("#splash").classList.add("hide"); }, 1700);
 });
