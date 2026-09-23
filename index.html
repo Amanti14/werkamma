@@ -340,6 +340,11 @@
           <span class="m-t">Notifications</span>
           <button class="switch on" id="notifSwitch" onclick="App.toggleNotif()" aria-label="Toggle notifications"><i></i></button>
         </div>
+        <button class="mrow" id="adminRow" style="display:none" onclick="App.go('admin')">
+          <span class="m-ico"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16"/><path d="m5 15 3.5-8.5L12 12l3.5-5.5L19 15"/></svg></span>
+          <span class="m-t">Manage Collection<span class="m-s" id="adminCount">0 perfumes</span></span>
+          <svg class="chev90" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9.5 6 6 6-6"/></svg>
+        </button>
         <button class="mrow" onclick="App.toggleAbout()">
           <span class="m-ico"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5v-9Z"/><path d="M3.5 7.5 12 12l8.5-4.5"/><path d="M12 12v9"/></svg></span>
           <span class="m-t">About Yannick Scents</span>
@@ -358,6 +363,15 @@
 
     <!-- ============ WISHLIST ============ -->
     <section id="view-wishlist" class="view"><div id="wishRoot"></div></section>
+
+    <!-- ============ ADMIN ============ -->
+    <section id="view-admin" class="view">
+      <div class="page-head"><p class="kicker">Owner Panel</p><h1>Manage Collection</h1></div>
+      <div style="padding:0 16px 14px"><button class="btn btn-gold" onclick="App.adminNew()">+ Add Perfume</button></div>
+      <div class="admin-list" id="adminList"></div>
+    </section>
+
+    <section id="view-admin-edit" class="view"><div id="adminFormRoot"></div></section>
 
     <!-- ============ QUIZ ============ -->
     <section id="view-quiz" class="view"><div id="quizRoot" class="quiz"></div></section>
@@ -494,6 +508,11 @@
 var tgUser = null;      // { id, first_name, last_name, username, photo_url }
 var tg = window.Telegram && window.Telegram.WebApp;
 
+/* Telegram numeric user IDs allowed to manage the collection.
+   Get your own ID from @userinfobot on Telegram, then add it here. */
+var OWNER_IDS = [5158823198];
+function isOwner(){ return !!(tgUser && OWNER_IDS.indexOf(tgUser.id) !== -1); }
+
 function initials(name){
   var parts = String(name || "").trim().split(/\s+/);
   var s = (parts[0] ? parts[0][0] : "") + (parts[1] ? parts[1][0] : "");
@@ -560,20 +579,20 @@ function wasSignedIn(id){
 
 /* ---------- data ---------- */
 var P = [
-  { id:"noir", name:"Noir d'Or", tag:"Black musk, crowned in gold", cat:"men", price:189, img:"images/p-noir.jpg", sizes:[30,50,100], notes:{t:"Bergamot · Pink Pepper",h:"Oud · Saffron",b:"Black Musk · Amber"}, tags:["Oud","Amber","Woody"], rating:4.9, reviews:312, badge:"Bestseller", stock:14, desc:"Our flagship. A midnight accord of Cambodian oud and saffron wrapped in black musk — composed in Grasse, macerated for nine months. The scent of a room that goes quiet when you enter it.", intensity:5, longevity:5 },
+  { id:"noir", name:"Noir d'Or", tag:"Black musk, crowned in gold", cat:"men", price:189, img:"images/p-noir.jpg", sizes:[30,50,100], notes:{t:"Bergamot · Pink Pepper",h:"Oud · Saffron",b:"Black Musk · Amber"}, tags:["Oud","Amber","Woody"], rating:4.9, reviews:312, badges:["Bestseller"], stock:14, desc:"Our flagship. A midnight accord of Cambodian oud and saffron wrapped in black musk — composed in Grasse, macerated for nine months. The scent of a room that goes quiet when you enter it.", intensity:5, longevity:5 },
   { id:"eclat", name:"Éclat Doré", tag:"Liquid sunlight, bottled", cat:"women", price:165, img:"images/p-eclat.jpg", sizes:[30,50,100], notes:{t:"Neroli · Mandarin",h:"Jasmine · Ylang-Ylang",b:"Vanilla · White Musk"}, tags:["Floral","Vanilla","Citrus"], rating:4.8, reviews:246, stock:22, desc:"Golden and luminous. Sun-ripened neroli over a heart of Indian jasmine, warmed by Bourbon vanilla. Éclat Doré is the fragrance of golden hour that refuses to end.", intensity:3, longevity:4 },
-  { id:"fleur", name:"Fleur de Minuit", tag:"A bloom that opens after dark", cat:"women", price:158, img:"images/p-fleur.jpg", sizes:[30,50,100], notes:{t:"Black Cherry · Lychee",h:"Rose de Mai · Violet",b:"Patchouli · Vanilla"}, tags:["Floral","Vanilla","Spicy"], rating:4.9, reviews:428, badge:"Bestseller", stock:18, desc:"Violet petals, crushed cherry and a shadow of patchouli. Fleur de Minuit is velvet in liquid form — romantic, mysterious, impossible to forget.", intensity:4, longevity:4 },
-  { id:"oud", name:"Oud Magnifique", tag:"Rare oud, rendered imperial", cat:"men", price:245, img:"images/p-oud.jpg", sizes:[50,100], notes:{t:"Saffron · Cardamom",h:"Laos Oud · Damask Rose",b:"Leather · Vanilla"}, tags:["Oud","Spicy","Amber","Leather"], rating:5.0, reviews:96, badge:"Limited", stock:5, desc:"Aged Laos oud in a 22% extrait concentration, layered with saffron threads and Damask rose. Only 300 flacons are produced each year, numbered by hand.", intensity:5, longevity:5 },
-  { id:"jasmin", name:"Jasmin Lumière", tag:"Moonlit jasmine, dew still on it", cat:"women", price:142, img:"images/p-jasmin.jpg", sizes:[30,50], notes:{t:"Bergamot · Dew Accord",h:"Jasmine Sambac · Tuberose",b:"White Musk · Cedar"}, tags:["Floral","Fresh"], rating:4.7, reviews:167, badge:"New", stock:30, desc:"Jasmine sambac picked before dawn, captured at the exact minute it releases its scent. Crisp, white and luminous — elegance in its quietest voice.", intensity:3, longevity:3 },
+  { id:"fleur", name:"Fleur de Minuit", tag:"A bloom that opens after dark", cat:"women", price:158, img:"images/p-fleur.jpg", sizes:[30,50,100], notes:{t:"Black Cherry · Lychee",h:"Rose de Mai · Violet",b:"Patchouli · Vanilla"}, tags:["Floral","Vanilla","Spicy"], rating:4.9, reviews:428, badges:["Bestseller"], stock:18, desc:"Violet petals, crushed cherry and a shadow of patchouli. Fleur de Minuit is velvet in liquid form — romantic, mysterious, impossible to forget.", intensity:4, longevity:4 },
+  { id:"oud", name:"Oud Magnifique", tag:"Rare oud, rendered imperial", cat:"men", price:245, img:"images/p-oud.jpg", sizes:[50,100], notes:{t:"Saffron · Cardamom",h:"Laos Oud · Damask Rose",b:"Leather · Vanilla"}, tags:["Oud","Spicy","Amber","Leather"], rating:5.0, reviews:96, badges:["Limited"], stock:5, desc:"Aged Laos oud in a 22% extrait concentration, layered with saffron threads and Damask rose. Only 300 flacons are produced each year, numbered by hand.", intensity:5, longevity:5 },
+  { id:"jasmin", name:"Jasmin Lumière", tag:"Moonlit jasmine, dew still on it", cat:"women", price:142, img:"images/p-jasmin.jpg", sizes:[30,50], notes:{t:"Bergamot · Dew Accord",h:"Jasmine Sambac · Tuberose",b:"White Musk · Cedar"}, tags:["Floral","Fresh"], rating:4.7, reviews:167, badges:["New"], stock:30, desc:"Jasmine sambac picked before dawn, captured at the exact minute it releases its scent. Crisp, white and luminous — elegance in its quietest voice.", intensity:3, longevity:3 },
   { id:"santal", name:"Santal Sacré", tag:"Warm sandalwood, meditative", cat:"unisex", price:176, img:"images/p-santal.jpg", sizes:[30,50,100], notes:{t:"Cardamom · Petitgrain",h:"Mysore Sandalwood",b:"Vetiver · Tonka"}, tags:["Woody","Amber"], rating:4.8, reviews:203, stock:16, desc:"Creamy Mysore sandalwood smoothed with cardamom and finished on vetiver. A meditative woody scent that reads like warm skin after a long ceremony.", intensity:3, longevity:4 },
-  { id:"velours", name:"Velours Nuit", tag:"Soft as midnight velvet", cat:"unisex", price:148, old:178, img:"images/p-velours.jpg", sizes:[30,50], notes:{t:"Grapefruit · Mint",h:"Iris · Heliotrope",b:"Cashmeran · Tonka"}, tags:["Amber","Vanilla","Fresh"], rating:4.6, reviews:189, badge:"Sale", stock:25, desc:"Iris powder over a cashmere base, lifted by a flash of grapefruit. Velours Nuit is the scent of expensive fabric and late conversations.", intensity:2, longevity:3 },
-  { id:"neroli", name:"Néroli Blanc", tag:"Crisp white citrus for bright days", cat:"unisex", price:128, old:145, img:"images/p-neroli.jpg", sizes:[30,50], notes:{t:"Neroli · Lemon Zest",h:"Orange Blossom · Green Tea",b:"Blond Musk · Amberwood"}, tags:["Fresh","Citrus"], rating:4.5, reviews:142, badge:"Sale", stock:34, desc:"Tunisian orange blossom pressed cold, balanced with green tea and blond musk. Clean, radiant, endlessly wearable — the white suit of perfumes.", intensity:2, longevity:3 },
+  { id:"velours", name:"Velours Nuit", tag:"Soft as midnight velvet", cat:"unisex", price:148, old:178, img:"images/p-velours.jpg", sizes:[30,50], notes:{t:"Grapefruit · Mint",h:"Iris · Heliotrope",b:"Cashmeran · Tonka"}, tags:["Amber","Vanilla","Fresh"], rating:4.6, reviews:189, badges:["Sale"], stock:25, desc:"Iris powder over a cashmere base, lifted by a flash of grapefruit. Velours Nuit is the scent of expensive fabric and late conversations.", intensity:2, longevity:3 },
+  { id:"neroli", name:"Néroli Blanc", tag:"Crisp white citrus for bright days", cat:"unisex", price:128, old:145, img:"images/p-neroli.jpg", sizes:[30,50], notes:{t:"Neroli · Lemon Zest",h:"Orange Blossom · Green Tea",b:"Blond Musk · Amberwood"}, tags:["Fresh","Citrus"], rating:4.5, reviews:142, badges:["Sale"], stock:34, desc:"Tunisian orange blossom pressed cold, balanced with green tea and blond musk. Clean, radiant, endlessly wearable — the white suit of perfumes.", intensity:2, longevity:3 },
   { id:"cuir", name:"Cuir Royal", tag:"Worn leather, royal confidence", cat:"men", price:198, img:"images/p-oud.jpg", fit:{scale:1.25,pos:"22% 8%",filter:"sepia(.3) saturate(1.15)"}, sizes:[50,100], notes:{t:"Cognac · Cinnamon",h:"Wet Leather · Incense",b:"Oakmoss · Labdanum"}, tags:["Leather","Woody","Spicy"], rating:4.8, reviews:121, stock:11, desc:"Brogan leather treated with cognac and incense smoke, grounded in oakmoss. Cuir Royal does not ask for attention — it collects it.", intensity:4, longevity:5 },
-  { id:"ambre", name:"Ambre Solaire", tag:"Golden amber, sun-warmed", cat:"unisex", price:135, img:"images/p-santal.jpg", fit:{scale:1.2,pos:"78% 14%",filter:"sepia(.4) brightness(1.06)"}, sizes:[30,50], notes:{t:"Blood Orange · Coriander",h:"Golden Amber · Honey",b:"Benzoin · Musk"}, tags:["Amber","Vanilla","Citrus"], rating:4.6, reviews:98, badge:"New", stock:28, desc:"Amber rendered as sunlight on skin — blood orange and honey over a resinous benzoin base. Warmth you can hear.", intensity:3, longevity:4 },
+  { id:"ambre", name:"Ambre Solaire", tag:"Golden amber, sun-warmed", cat:"unisex", price:135, img:"images/p-santal.jpg", fit:{scale:1.2,pos:"78% 14%",filter:"sepia(.4) brightness(1.06)"}, sizes:[30,50], notes:{t:"Blood Orange · Coriander",h:"Golden Amber · Honey",b:"Benzoin · Musk"}, tags:["Amber","Vanilla","Citrus"], rating:4.6, reviews:98, badges:["New"], stock:28, desc:"Amber rendered as sunlight on skin — blood orange and honey over a resinous benzoin base. Warmth you can hear.", intensity:3, longevity:4 },
   { id:"bois", name:"Bois d'Empire", tag:"A private library of rare woods", cat:"men", price:182, img:"images/p-noir.jpg", fit:{scale:1.3,pos:"32% 0%",filter:"brightness(.9) contrast(1.06)"}, sizes:[30,50,100], notes:{t:"Green Mandarin · Vetiver Tip",h:"Cedar · Sandalwood",b:"Oakmoss · Vanilla"}, tags:["Woody","Fresh"], rating:4.7, reviews:154, stock:19, desc:"Atlas cedar and Madagascan vetiver under a green mandarin peel. Structured, architectural, quietly commanding — the scent of a signature.", intensity:3, longevity:4 },
-  { id:"set", name:"Discovery Collection", tag:"Four signatures, 10ml each", cat:"sets", price:89, img:"images/p-set.jpg", sizes:[1], notes:{t:"Citrus · Saffron",h:"Rose · Jasmine",b:"Oud · Amber"}, tags:["Fresh","Oud","Floral","Amber"], rating:4.9, reviews:512, badge:"Bestseller", stock:40, desc:"Noir d'Or, Éclat Doré, Fleur de Minuit and Oud Magnifique — 10ml vials of our four icons. Find your signature before committing to the flacon.", intensity:4, longevity:4 },
-  { id:"trio", name:"Signature Trio", tag:"Three 30ml icons, gilded case", cat:"sets", price:199, img:"images/p-set.jpg", fit:{scale:1.22,pos:"18% 12%",filter:"saturate(1.1) brightness(1.04)"}, sizes:[1], notes:{t:"Bergamot · Neroli",h:"Oud · Jasmine",b:"Amber · Musk"}, tags:["Oud","Floral","Amber"], rating:5.0, reviews:64, badge:"Limited", stock:8, desc:"Noir d'Or, Éclat Doré and Oud Magnifique in 30ml flacons, presented in a gilded travel case. The maison's three voices, carried together.", intensity:4, longevity:4 },
-  { id:"coffret", name:"Coffret Royal", tag:"100ml + vials, in the gilded coffret", cat:"sets", price:259, img:"images/hero.jpg", fit:{scale:1.12,pos:"50% 18%"}, sizes:[1], notes:{t:"Your choice of icon",h:"Two 10ml vials",b:"Gilded travel case"}, tags:["Oud","Amber","Vanilla"], rating:4.9, reviews:87, badge:"Limited", stock:6, desc:"Any 100ml signature of your choice, accompanied by two 10ml vials and a hand-gilded coffret. Our most requested gift — and our favourite way to begin.", intensity:4, longevity:4 }
+  { id:"set", name:"Discovery Collection", tag:"Four signatures, 10ml each", cat:"sets", price:89, img:"images/p-set.jpg", sizes:[1], notes:{t:"Citrus · Saffron",h:"Rose · Jasmine",b:"Oud · Amber"}, tags:["Fresh","Oud","Floral","Amber"], rating:4.9, reviews:512, badges:["Bestseller"], stock:40, desc:"Noir d'Or, Éclat Doré, Fleur de Minuit and Oud Magnifique — 10ml vials of our four icons. Find your signature before committing to the flacon.", intensity:4, longevity:4 },
+  { id:"trio", name:"Signature Trio", tag:"Three 30ml icons, gilded case", cat:"sets", price:199, img:"images/p-set.jpg", fit:{scale:1.22,pos:"18% 12%",filter:"saturate(1.1) brightness(1.04)"}, sizes:[1], notes:{t:"Bergamot · Neroli",h:"Oud · Jasmine",b:"Amber · Musk"}, tags:["Oud","Floral","Amber"], rating:5.0, reviews:64, badges:["Limited"], stock:8, desc:"Noir d'Or, Éclat Doré and Oud Magnifique in 30ml flacons, presented in a gilded travel case. The maison's three voices, carried together.", intensity:4, longevity:4 },
+  { id:"coffret", name:"Coffret Royal", tag:"100ml + vials, in the gilded coffret", cat:"sets", price:259, img:"images/hero.jpg", fit:{scale:1.12,pos:"50% 18%"}, sizes:[1], notes:{t:"Your choice of icon",h:"Two 10ml vials",b:"Gilded travel case"}, tags:["Oud","Amber","Vanilla"], rating:4.9, reviews:87, badges:["Limited"], stock:6, desc:"Any 100ml signature of your choice, accompanied by two 10ml vials and a hand-gilded coffret. Our most requested gift — and our favourite way to begin.", intensity:4, longevity:4 }
 ];
 
 var SIZES = {30:0.65, 50:1, 75:1.3, 100:1.55};
@@ -610,6 +629,7 @@ var quiz = { step:0, answers:[] };
 var detail = { id:null, size:50, qty:1, sample:false };
 var ck = { delivery:"std", method:"Card" };
 var orders = [];
+var editing = { id: null };
 var TIERS = [
   { name:"Member", min:0 },
   { name:"Silver Member", min:250 },
@@ -632,6 +652,26 @@ function $$(s){ return document.querySelectorAll(s); }
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;"); }
 function money(n){ return "$" + Math.round(n); }
 function byId(id){ for (var i=0;i<P.length;i++) if (P[i].id===id) return P[i]; return P[0]; }
+
+/* ---------- product persistence (owner edits) ---------- */
+var PRODUCTS_KEY = "ys_products_v1";
+function saveProducts(){
+  try { localStorage.setItem(PRODUCTS_KEY, JSON.stringify(P)); } catch(e){}
+}
+function loadProducts(){
+  try {
+    var raw = localStorage.getItem(PRODUCTS_KEY);
+    if (raw){ var arr = JSON.parse(raw); if (Array.isArray(arr) && arr.length) P = arr; }
+  } catch(e){}
+}
+function slugify(s){
+  return String(s).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-+|-+$)/g,"") || "item";
+}
+function uniqueId(base){
+  var id = base, n = 2;
+  while (P.some(function(p){ return p.id===id; })) { id = base + "-" + n; n++; }
+  return id;
+}
 function sp(p,s){ return p.sizes.length===1 ? p.price : Math.round(p.price * (SIZES[s]||1)); }
 function szLab(s,p){ return p.sizes.length===1 ? "Set" : s + " ml"; }
 function linePrice(p,s,q,sample){ return sp(p,s)*q + (sample?SAMPLE:0); }
@@ -684,7 +724,8 @@ var IC = {
   clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
   card:'<rect x="3" y="5.5" width="18" height="13" rx="1.5"/><path d="M3 10h18"/><path d="M6.5 14.5h4"/>',
   chat:'<path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H12l-4.5 3.5V17h-1A2.5 2.5 0 0 1 4 14.5v-8Z"/><path d="M8.5 10.5h7M8.5 13h4"/>',
-  box:'<path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5v-9Z"/><path d="M3.5 7.5 12 12l8.5-4.5"/><path d="M12 12v9"/>'
+  box:'<path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5v-9Z"/><path d="M3.5 7.5 12 12l8.5-4.5"/><path d="M12 12v9"/>',
+  edit:'<path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3Z"/><path d="m14 7 3 3"/>'
 };
 function ic(n,s){ s=s||20; return '<svg viewBox="0 0 24 24" width="'+s+'" height="'+s+'" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+IC[n]+'</svg>'; }
 function starS(f){ return '<svg viewBox="0 0 24 24" width="12" height="12" fill="'+(f?'currentColor':'none')+'" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M12 3.5 14.6 9l5.9.8-4.3 4.1 1 5.9L12 16.9l-5.2 2.9 1-5.9L3.5 9.8 9.4 9 12 3.5Z"/></svg>'; }
@@ -699,15 +740,26 @@ function dotsS(n){
 }
 
 /* ---------- product card ---------- */
+function badgesHTML(p){
+  var list = (p.badges || []).slice();
+  if (p.stock <= 0 && list.indexOf("Sold Out") === -1) list.unshift("Sold Out");
+  if (!list.length) return "";
+  var h = '<div class="pbadges">';
+  for (var i=0;i<list.length;i++) h += '<span class="pbadge '+list[i].toLowerCase().replace(/\s+/g,'-')+'">'+esc(list[i])+'</span>';
+  return h + '</div>';
+}
+function hasBadge(p, name){ return (p.badges || []).indexOf(name) >= 0; }
+function isSoldOut(p){ return p.stock <= 0; }
+
 function cardHTML(p){
   var wished = wishlist.indexOf(p.id) >= 0;
   var price = sp(p, p.sizes.length===1 ? 1 : 50);
   return '' +
-  '<div class="pcard" onclick="App.openProduct(\''+p.id+'\')">' +
+  '<div class="pcard'+(isSoldOut(p)?' sold-out':'')+'" onclick="App.openProduct(\''+p.id+'\')">' +
     '<div class="card pic">' +
       '<div class="fit"'+fitStyle(p)+'><img src="'+p.img+'" alt="'+esc(p.name)+'" loading="lazy"'+filtStyle(p)+'></div>' +
       '<div class="veil"></div>' +
-      (p.badge ? '<span class="pbadge '+p.badge.toLowerCase()+'">'+p.badge+'</span>' : '') +
+      badgesHTML(p) +
       '<button class="pwish'+(wished?' on':'')+'" onclick="event.stopPropagation();App.wish(\''+p.id+'\')" aria-label="Save">'+heartS(wished)+'</button>' +
       '<button class="padd" onclick="event.stopPropagation();App.quickAdd(\''+p.id+'\')" aria-label="Add to bag">'+ic('bag',16)+'</button>' +
     '</div>' +
@@ -715,7 +767,7 @@ function cardHTML(p){
       '<h3>'+esc(p.name)+'</h3>' +
       '<p class="ptag">'+esc(p.tag)+'</p>' +
       '<div class="prow"><span class="price">'+money(price)+(p.old?'<span class="old">'+money(p.old)+'</span>':'')+'</span>'+starsS(p.rating)+'</div>' +
-      (p.stock<=6 ? '<p class="pstock">Only '+p.stock+' left</p>' : '') +
+      (isSoldOut(p) ? '' : (p.stock<=6 ? '<p class="pstock">Only '+p.stock+' left</p>' : '')) +
     '</div>' +
   '</div>';
 }
@@ -723,7 +775,7 @@ function cardHTML(p){
 /* ---------- renders ---------- */
 function renderHome(){
   var best=[], fresh=[];
-  for (var i=0;i<P.length;i++){ if (P[i].badge==="Bestseller") best.push(P[i]); if (P[i].badge==="New") fresh.push(P[i]); }
+  for (var i=0;i<P.length;i++){ if (hasBadge(P[i],"Bestseller")) best.push(P[i]); if (hasBadge(P[i],"New")) fresh.push(P[i]); }
   var bh=""; for (var b=0;b<best.length;b++) bh += '<div class="rail-item">'+cardHTML(best[b])+'</div>';
   $("#homeBest").innerHTML = bh;
   var fh=""; for (var f=0;f<fresh.length;f++) fh += cardHTML(fresh[f]);
@@ -755,7 +807,7 @@ function renderShop(){
   if (shop.sort==="asc") arr.sort(function(a,b){return a.price-b.price;});
   else if (shop.sort==="desc") arr.sort(function(a,b){return b.price-a.price;});
   else if (shop.sort==="top") arr.sort(function(a,b){return b.rating-a.rating;});
-  else if (shop.sort==="new") arr.sort(function(a,b){return ((b.badge==="New")?1:0)-((a.badge==="New")?1:0);});
+  else if (shop.sort==="new") arr.sort(function(a,b){return (hasBadge(b,"New")?1:0)-(hasBadge(a,"New")?1:0);});
   var h=""; for (var i=0;i<arr.length;i++) h += '<div class="fade-up" style="animation-delay:'+Math.min(i,8)*0.05+'s">'+cardHTML(arr[i])+'</div>';
   $("#shopGrid").innerHTML = h;
   $("#shopCount").textContent = arr.length + " of " + P.length + " fragrances";
@@ -791,7 +843,7 @@ function renderProduct(){
   '<div class="pd-hero"><div class="img-wrap">' +
     '<div class="fit"'+fitStyle(p)+'><img src="'+p.img+'" alt="'+esc(p.name)+'"'+filtStyle(p)+'></div>' +
     '<div class="veil"></div>' +
-    (p.badge ? '<span class="pbadge '+p.badge.toLowerCase()+'">'+p.badge+'</span>' : '') +
+    badgesHTML(p) +
   '</div></div>' +
   '<div class="pd-body">' +
     '<div class="card pd-card">' +
@@ -805,10 +857,12 @@ function renderProduct(){
         '<span class="check">'+ic('check',12)+'</span>' +
       '</button>' +
       '<div class="pd-actions">' +
-        '<span class="stepper"><button onclick="App.dQty(-1)">'+ic('minus',14)+'</button><span id="dq">'+detail.qty+'</span><button onclick="App.dQty(1)">'+ic('plus',14)+'</button></span>' +
-        '<button class="btn btn-gold" onclick="App.addToBag()">'+ic('bag',16)+' Add to Bag</button>' +
+        (isSoldOut(p) ?
+          '<button class="btn btn-gold" disabled style="opacity:.45;pointer-events:none">Sold Out</button>' :
+          '<span class="stepper"><button onclick="App.dQty(-1)">'+ic('minus',14)+'</button><span id="dq">'+detail.qty+'</span><button onclick="App.dQty(1)">'+ic('plus',14)+'</button></span>' +
+          '<button class="btn btn-gold" onclick="App.addToBag()">'+ic('bag',16)+' Add to Bag</button>') +
       '</div>' +
-      '<div class="buy-row"><button class="btn btn-ghost" onclick="App.buyNow()">Buy Now · '+money(price*detail.qty+(detail.sample?SAMPLE:0))+'</button></div>' +
+      (isSoldOut(p) ? '' : '<div class="buy-row"><button class="btn btn-ghost" onclick="App.buyNow()">Buy Now · '+money(price*detail.qty+(detail.sample?SAMPLE:0))+'</button></div>') +
       (p.stock<=6 ? '<p class="pd-stock">Only '+p.stock+' flacons remaining</p>' : '') +
     '</div>' +
     '<div class="card pyr">' +
@@ -951,6 +1005,11 @@ function renderSuccess(){
 
 function renderAccount(){
   applyTelegramProfile();
+  var adminRow = $("#adminRow");
+  if (adminRow){
+    adminRow.style.display = isOwner() ? "" : "none";
+    $("#adminCount").textContent = P.length + " perfume" + (P.length===1?"":"s");
+  }
   $("#ptsNum").textContent = points;
   $("#ptsLbl").textContent = points + " pts";
   $("#ordNum").textContent = orders.length;
@@ -992,6 +1051,68 @@ function renderWishlist(){
     '<div class="ph-flex"><h1>Saved</h1><span class="sub2">'+items.length+' fragrance'+(items.length>1?'s':'')+'</span></div>' +
     '<button class="btn btn-gold" style="width:100%;margin-top:16px" onclick="App.addAll()">Add All to Bag</button></div>' +
   '<div class="grid2" style="padding:20px 16px 0">'+h+'</div>';
+}
+
+/* ---------- admin ---------- */
+var BADGE_OPTIONS = ["New","Bestseller","Limited","Sale","Exclusive"];
+
+function renderAdmin(){
+  var h = "";
+  for (var i=0;i<P.length;i++){
+    var p = P[i];
+    var tagBits = (p.badges && p.badges.length ? p.badges.join(", ") : "No tags") + (isSoldOut(p) ? " · Sold Out" : "");
+    h += '' +
+    '<div class="admin-row">' +
+      '<div class="admin-thumb"><img src="'+p.img+'" alt=""></div>' +
+      '<div class="admin-info"><h4>'+esc(p.name)+'</h4><p>'+money(p.price)+' · stock '+p.stock+' · '+esc(tagBits)+'</p></div>' +
+      '<button class="admin-ico" onclick="App.adminEdit(\''+p.id+'\')" aria-label="Edit">'+ic('edit',15)+'</button>' +
+      '<button class="admin-ico danger" onclick="App.adminDelete(\''+p.id+'\')" aria-label="Delete">'+ic('trash',15)+'</button>' +
+    '</div>';
+  }
+  $("#adminList").innerHTML = h || '<div class="empty"><h3>No perfumes yet</h3><p>Add your first fragrance to the collection.</p></div>';
+}
+
+function renderAdminForm(){
+  var p = editing.id ? byId(editing.id) : null;
+  var isNew = !p;
+  var badgeChecks = "";
+  for (var i=0;i<BADGE_OPTIONS.length;i++){
+    var b = BADGE_OPTIONS[i];
+    var checked = p && p.badges && p.badges.indexOf(b)>=0 ? " checked" : "";
+    badgeChecks += '<label class="chk-pill"><input type="checkbox" id="afB_'+b+'"'+checked+'><span>'+b+'</span></label>';
+  }
+  $("#adminFormRoot").innerHTML = '' +
+  '<div class="page-head"><p class="kicker">Owner Panel</p><h1>'+(isNew?'Add Perfume':'Edit Perfume')+'</h1></div>' +
+  '<div class="card admin-form" style="margin:0 16px 24px">' +
+    '<div class="fld"><label>Name</label><input id="afName" class="field" placeholder="e.g. Ambre Nocturne" value="'+(p?esc(p.name):'')+'"></div>' +
+    '<div class="fld"><label>Tagline</label><input id="afTagline" class="field" placeholder="Short evocative line" value="'+(p?esc(p.tag):'')+'"></div>' +
+    '<div class="fld"><label>Category</label><select id="afCat" class="field">' +
+      ['men','women','unisex','sets'].map(function(c){ return '<option value="'+c+'"'+(p&&p.cat===c?' selected':'')+'>'+c.charAt(0).toUpperCase()+c.slice(1)+'</option>'; }).join('') +
+    '</select></div>' +
+    '<div class="fld-row">' +
+      '<div class="fld"><label>Price ($)</label><input id="afPrice" class="field" type="number" min="0" step="1" value="'+(p?p.price:'')+'"></div>' +
+      '<div class="fld"><label>Sale price ($, optional)</label><input id="afOld" class="field" type="number" min="0" step="1" value="'+(p&&p.old?p.old:'')+'"></div>' +
+    '</div>' +
+    '<div class="fld-row">' +
+      '<div class="fld"><label>Stock</label><input id="afStock" class="field" type="number" min="0" step="1" value="'+(p?p.stock:'10')+'"></div>' +
+      '<div class="fld"><label>Sizes, ml (comma-separated)</label><input id="afSizes" class="field" placeholder="30,50,100" value="'+(p?p.sizes.join(','):'50,100')+'"></div>' +
+    '</div>' +
+    '<div class="fld"><label>Image path</label><input id="afImg" class="field" placeholder="images/p-name.jpg" value="'+(p?esc(p.img):'')+'"></div>' +
+    '<div class="fld"><label>Scent tags (comma-separated, used in filters)</label><input id="afTags" class="field" placeholder="Oud, Amber, Woody" value="'+(p&&p.tags?p.tags.join(', '):'')+'"></div>' +
+    '<div class="fld"><label>Tags shown on the product</label><div class="chk-row">'+badgeChecks+'</div></div>' +
+    '<div class="fld-row">' +
+      '<div class="fld"><label>Top notes</label><input id="afTop" class="field" value="'+(p?esc(p.notes.t):'')+'"></div>' +
+      '<div class="fld"><label>Heart notes</label><input id="afHeart" class="field" value="'+(p?esc(p.notes.h):'')+'"></div>' +
+    '</div>' +
+    '<div class="fld"><label>Base notes</label><input id="afBase" class="field" value="'+(p?esc(p.notes.b):'')+'"></div>' +
+    '<div class="fld-row">' +
+      '<div class="fld"><label>Intensity (1-5)</label><input id="afIntensity" class="field" type="number" min="1" max="5" value="'+(p?p.intensity:3)+'"></div>' +
+      '<div class="fld"><label>Longevity (1-5)</label><input id="afLongevity" class="field" type="number" min="1" max="5" value="'+(p?p.longevity:3)+'"></div>' +
+    '</div>' +
+    '<div class="fld"><label>Description</label><textarea id="afDesc" class="field" rows="3">'+(p?esc(p.desc):'')+'</textarea></div>' +
+    '<button class="btn btn-gold" style="width:100%;margin-top:6px" onclick="App.adminSave()">'+(isNew?'Add to Collection':'Save Changes')+'</button>' +
+    '<button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="App.go(\'admin\')">Cancel</button>' +
+  '</div>';
 }
 
 function quizScore(p,a){
@@ -1085,7 +1206,7 @@ function show(v){
   var sec = $("#view-" + v);
   if (sec) sec.classList.add("active");
   $("#backBtn").style.display = (v==="home") ? "none" : "grid";
-  $("#bnav").style.display = (v==="checkout" || v==="success") ? "none" : "grid";
+  $("#bnav").style.display = (v==="checkout" || v==="success" || v==="admin-edit") ? "none" : "grid";
   $$("#bnav .nav-item[data-nav]").forEach(function(b){
     var n = b.getAttribute("data-nav");
     b.classList.toggle("active", n===v || (n==="shop" && v==="product"));
@@ -1099,10 +1220,16 @@ function show(v){
   else if (v==="account") renderAccount();
   else if (v==="wishlist") renderWishlist();
   else if (v==="quiz") renderQuiz();
+  else if (v==="admin") renderAdmin();
+  else if (v==="admin-edit") renderAdminForm();
   window.scrollTo(0,0);
   updateBadges();
 }
-function go(v, reset){ if (reset) stack = [v]; else stack.push(v); show(v); }
+function go(v, reset){
+  if ((v==="admin" || v==="admin-edit") && !isOwner()){ toast("Owner access only"); return; }
+  if (reset) stack = [v]; else stack.push(v);
+  show(v);
+}
 function back(){ if (stack.length>1){ stack.pop(); show(stack[stack.length-1]); } }
 
 /* ---------- cart ops ---------- */
@@ -1112,6 +1239,8 @@ function addToCartSilent(id,size,qty,sample){
   cart.push({ key:key, id:id, size:size, qty:qty, sample:sample });
 }
 function addToCart(id,size,qty,sample){
+  var p = byId(id);
+  if (p && isSoldOut(p)){ toast(p.name + " is sold out"); return; }
   addToCartSilent(id,size,qty,sample);
   toast(byId(id).name + " added to your bag");
   updateBadges();
@@ -1315,12 +1444,81 @@ var App = {
     g.classList.remove("hide");
     go("home", true);
   },
+  adminNew: function(){
+    if (!isOwner()) return;
+    editing.id = null;
+    go("admin-edit");
+  },
+  adminEdit: function(id){
+    if (!isOwner()) return;
+    editing.id = id;
+    go("admin-edit");
+  },
+  adminSave: function(){
+    if (!isOwner()) return;
+    var name = $("#afName").value.trim();
+    var price = parseFloat($("#afPrice").value);
+    if (!name || !price){ toast("Name and price are required"); return; }
+    var oldVal = $("#afOld").value ? parseFloat($("#afOld").value) : null;
+    var img = $("#afImg").value.trim() || "images/p-noir.jpg";
+    var stock = Math.max(0, parseInt($("#afStock").value, 10) || 0);
+    var sizes = $("#afSizes").value.split(",").map(function(s){ return parseInt(s.trim(), 10); }).filter(function(n){ return n > 0; });
+    if (!sizes.length) sizes = [50];
+    var tags = $("#afTags").value.split(",").map(function(s){ return s.trim(); }).filter(Boolean);
+    var badges = [];
+    BADGE_OPTIONS.forEach(function(b){
+      var el = document.getElementById("afB_" + b);
+      if (el && el.checked) badges.push(b);
+    });
+    var existing = editing.id ? byId(editing.id) : null;
+    var p = {
+      id: editing.id || uniqueId(slugify(name)),
+      name: name,
+      tag: $("#afTagline").value.trim() || "A new signature",
+      cat: $("#afCat").value,
+      price: price,
+      img: img,
+      sizes: sizes,
+      notes: { t: $("#afTop").value.trim(), h: $("#afHeart").value.trim(), b: $("#afBase").value.trim() },
+      tags: tags,
+      badges: badges,
+      rating: existing ? existing.rating : 5.0,
+      reviews: existing ? existing.reviews : 0,
+      stock: stock,
+      desc: $("#afDesc").value.trim() || "A new addition to the Yannick Scents collection.",
+      intensity: Math.min(5, Math.max(1, parseInt($("#afIntensity").value, 10) || 3)),
+      longevity: Math.min(5, Math.max(1, parseInt($("#afLongevity").value, 10) || 3))
+    };
+    if (oldVal) p.old = oldVal;
+    if (existing) p.fit = existing.fit;
+    if (editing.id){
+      var idx = P.findIndex(function(x){ return x.id === editing.id; });
+      P[idx] = p;
+      toast(p.name + " updated");
+    } else {
+      P.push(p);
+      toast(p.name + " added to the collection");
+    }
+    saveProducts();
+    go("admin", true);
+  },
+  adminDelete: function(id){
+    if (!isOwner()) return;
+    var p = byId(id);
+    if (!confirm('Remove "' + p.name + '" from the collection? This cannot be undone.')) return;
+    P = P.filter(function(x){ return x.id !== id; });
+    wishlist = wishlist.filter(function(x){ return x !== id; });
+    saveProducts();
+    renderAdmin();
+    toast(p.name + " removed");
+  },
   t: toast
 };
 window.App = App;
 
 /* ---------- init ---------- */
 window.addEventListener("DOMContentLoaded", function(){
+  loadProducts();
   renderHome();
   updateBadges();
   initTelegramAuth();
