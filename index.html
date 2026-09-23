@@ -44,7 +44,9 @@
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
       </button>
       <button class="icon-btn" onclick="App.go('account')" aria-label="Account">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.4-3.4 4.2-5 7.5-5s6.1 1.6 7.5 5"/></svg>
+        <span class="tb-avatar" id="tbAv">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.4-3.4 4.2-5 7.5-5s6.1 1.6 7.5 5"/></svg>
+        </span>
       </button>
     </div>
   </header>
@@ -509,9 +511,14 @@ var tgUser = null;      // { id, first_name, last_name, username, photo_url }
 var tg = window.Telegram && window.Telegram.WebApp;
 
 /* Telegram numeric user IDs allowed to manage the collection.
-   Get your own ID from @userinfobot on Telegram, then add it here. */
+   Owners get full billing + the "Owner" badge on their profile.
+   Admins can also manage the collection, badged "Admin" instead.
+   Get an ID from @userinfobot on Telegram, then add it below. */
 var OWNER_IDS = [5158823198];
+var ADMIN_IDS = [];
 function isOwner(){ return !!(tgUser && OWNER_IDS.indexOf(tgUser.id) !== -1); }
+function isAdmin(){ return !!(tgUser && ADMIN_IDS.indexOf(tgUser.id) !== -1); }
+function canManage(){ return isOwner() || isAdmin(); }
 
 function initials(name){
   var parts = String(name || "").trim().split(/\s+/);
@@ -562,6 +569,7 @@ function applyTelegramProfile(){
   if (nameEl) nameEl.textContent = full;
   if (handleEl) handleEl.textContent = handle;
   paintAvatar("acct", full, tgUser.photo_url);
+  paintAvatar("tb", full, tgUser.photo_url);
 }
 
 /* ---------- login persistence ---------- */
@@ -1007,7 +1015,7 @@ function renderAccount(){
   applyTelegramProfile();
   var adminRow = $("#adminRow");
   if (adminRow){
-    adminRow.style.display = isOwner() ? "" : "none";
+    adminRow.style.display = canManage() ? "" : "none";
     $("#adminCount").textContent = P.length + " perfume" + (P.length===1?"":"s");
   }
   $("#ptsNum").textContent = points;
@@ -1015,7 +1023,10 @@ function renderAccount(){
   $("#ordNum").textContent = orders.length;
   $("#wishNum").textContent = wishlist.length;
   var tier = tierFor(points), next = nextTier(points);
-  $("#tierBadge").textContent = tier.name;
+  var tierEl = $("#tierBadge");
+  if (isOwner()){ tierEl.textContent = "Owner"; tierEl.classList.add("staff"); }
+  else if (isAdmin()){ tierEl.textContent = "Admin"; tierEl.classList.add("staff"); }
+  else { tierEl.textContent = tier.name; tierEl.classList.remove("staff"); }
   var span = next ? (next.min - tier.min) : 1;
   var into = next ? (points - tier.min) : span;
   $("#tierFill").style.width = Math.min(100, into/span*100) + "%";
@@ -1226,7 +1237,7 @@ function show(v){
   updateBadges();
 }
 function go(v, reset){
-  if ((v==="admin" || v==="admin-edit") && !isOwner()){ toast("Owner access only"); return; }
+  if ((v==="admin" || v==="admin-edit") && !canManage()){ toast("Owner access only"); return; }
   if (reset) stack = [v]; else stack.push(v);
   show(v);
 }
@@ -1445,17 +1456,17 @@ var App = {
     go("home", true);
   },
   adminNew: function(){
-    if (!isOwner()) return;
+    if (!canManage()) return;
     editing.id = null;
     go("admin-edit");
   },
   adminEdit: function(id){
-    if (!isOwner()) return;
+    if (!canManage()) return;
     editing.id = id;
     go("admin-edit");
   },
   adminSave: function(){
-    if (!isOwner()) return;
+    if (!canManage()) return;
     var name = $("#afName").value.trim();
     var price = parseFloat($("#afPrice").value);
     if (!name || !price){ toast("Name and price are required"); return; }
@@ -1503,7 +1514,7 @@ var App = {
     go("admin", true);
   },
   adminDelete: function(id){
-    if (!isOwner()) return;
+    if (!canManage()) return;
     var p = byId(id);
     if (!confirm('Remove "' + p.name + '" from the collection? This cannot be undone.')) return;
     P = P.filter(function(x){ return x.id !== id; });
