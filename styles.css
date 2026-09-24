@@ -1,5 +1,5 @@
 /* ============================================================
-   YANNICK SCENTS — Maison de Parfum
+   WERKAMMA — Maison de Parfum
    Telegram Mini App · standalone stylesheet
    ============================================================ */
 
@@ -817,3 +817,12 @@ details.acc { border-bottom: 1px solid rgba(201, 162, 39, 0.12); }
 .chk-pill { display: flex; align-items: center; gap: 6px; padding: 7px 12px; border: 1px solid rgba(201, 162, 39, 0.25); font-size: 11px; letter-spacing: 0.04em; color: var(--mute); cursor: pointer; }
 .chk-pill input { accent-color: var(--gold); }
 .chk-pill:has(input:checked) { color: var(--gold2); border-color: rgba(201, 162, 39, 0.6); background: rgba(201, 162, 39, 0.08); }
+
+.brand-logo {
+  display: inline-block;
+  background-image: url("images/logo.png?v=2");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+}
