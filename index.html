@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0a08" />
-  <meta name="description" content="Yannick Scents — Fine Fragrance House. Pure parfum crafted in small batches." />
-  <title>Yannick Scents — Fine Fragrance House</title>
+  <meta name="description" content="Werkamma — Fine Fragrance House. Pure parfum crafted in small batches." />
+  <title>Werkamma — Fine Fragrance House</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Parisienne&display=swap" rel="stylesheet" />
@@ -25,18 +25,7 @@
     </div>
     <div class="tb-mid">
       <button onclick="App.go('home',true)" aria-label="Home">
-        <svg viewBox="0 0 200 200" width="38" height="38">
-          <defs><linearGradient id="ysg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5e1a4"/><stop offset=".5" stop-color="#c9a227"/><stop offset="1" stop-color="#8a6d1f"/></linearGradient></defs>
-          <circle cx="100" cy="100" r="93" fill="none" stroke="url(#ysg)" stroke-width="2.4"/>
-          <circle cx="100" cy="100" r="88" fill="none" stroke="url(#ysg)" stroke-width="0.8" opacity="0.5"/>
-          <g stroke="url(#ysg)" fill="none" stroke-width="2.4"><rect x="92" y="24" width="16" height="7" rx="1.5"/><rect x="88" y="33" width="24" height="9" rx="2"/><rect x="81" y="44" width="38" height="16" rx="3"/></g>
-          <text x="100" y="116" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-weight="600" font-size="50" fill="url(#ysg)">YS</text>
-          <text x="100" y="152" text-anchor="middle" font-family="Parisienne, cursive" font-size="40" fill="url(#ysg)">Yannick</text>
-          <line x1="58" y1="167" x2="78" y2="167" stroke="url(#ysg)" stroke-width="1" opacity="0.7"/>
-          <line x1="122" y1="167" x2="142" y2="167" stroke="url(#ysg)" stroke-width="1" opacity="0.7"/>
-          <text x="100" y="171" text-anchor="middle" font-family="Jost, sans-serif" font-size="11" letter-spacing="6.5" fill="#cdb276">SCENTS</text>
-          <path d="M52 146 C 44 166, 34 176, 16 184" stroke="url(#ysg)" stroke-width="1.3" fill="none" opacity="0.8"/>
-        </svg>
+        <div class="brand-logo" style="width:38px;height:38px" role="img" aria-label="Werkamma"></div>
       </button>
     </div>
     <div class="tb-right">
@@ -56,12 +45,13 @@
     <!-- ============ HOME ============ -->
     <section id="view-home" class="view active">
       <div class="hero">
-        <img src="images/hero.jpg" alt="Yannick Scents" onerror="this.onerror=null;this.src=PLACEHOLDER_IMG;this.classList.add('ph-img')" />
+        <img src="images/hero.jpg" alt="Werkamma" onerror="this.onerror=null;this.src=PLACEHOLDER_IMG;this.classList.add('ph-img')" />
         <div class="veil"></div>
         <div class="copy">
           <p class="kicker fade-up">Fine Fragrance House · Est. 2024</p>
           <h1 class="fade-up" style="animation-delay:.08s">Scent,<br /><span class="gold-text gold-shimmer" style="font-style:italic">crowned in gold.</span></h1>
           <p class="sub fade-up" style="animation-delay:.16s">Pure parfum composed in Grasse, matured for months, worn by the few.</p>
+          <p class="script gold-text fade-up" style="animation-delay:.20s;font-size:20px;margin-top:8px">Be Bold, Be Gold, Be Werkamma.</p>
           <div class="cta-row fade-up" style="animation-delay:.24s">
             <button class="btn btn-gold" onclick="App.go('shop')">Explore</button>
             <button class="btn btn-ghost" onclick="App.go('quiz')">
@@ -130,10 +120,10 @@
 
       <div class="section">
         <div class="card promo">
-          <span class="wm">YS</span>
+          <span class="wm">W</span>
           <p class="kicker">Private offer</p>
           <h3>Your first ritual, <span class="gold-text" style="font-style:italic">on us.</span></h3>
-          <p>10% off any fragrance with code <b>YS10</b> at checkout.</p>
+          <p>10% off any fragrance with code <b>WK10</b> at checkout.</p>
           <button class="btn btn-gold" onclick="App.copyCode()">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="8.5" width="12" height="12" rx="1.5"/><path d="M15.5 8.5v-3A1.5 1.5 0 0 0 14 4H5A1.5 1.5 0 0 0 3.5 5.5v9A1.5 1.5 0 0 0 5 16h3.5"/></svg>
             Copy Code
@@ -170,7 +160,7 @@
         <div class="rail">
           <div class="card rcard">
             <span id="starsR1"></span>
-            <p class="quote">“Yannick Scents redefined what I thought a 50ml bottle could be — and it is worth double.”</p>
+            <p class="quote">“Werkamma redefined what I thought a 50ml bottle could be — and it is worth double.”</p>
             <p class="who">Isabelle T. <small>— Paris</small></p>
           </div>
           <div class="card rcard">
@@ -198,14 +188,7 @@
       </div>
 
       <footer class="footer">
-        <svg viewBox="0 0 200 200" width="82" height="82" style="opacity:.9">
-          <circle cx="100" cy="100" r="93" fill="none" stroke="url(#ysg)" stroke-width="2.4"/>
-          <circle cx="100" cy="100" r="88" fill="none" stroke="url(#ysg)" stroke-width="0.8" opacity="0.5"/>
-          <g stroke="url(#ysg)" fill="none" stroke-width="2.4"><rect x="92" y="24" width="16" height="7" rx="1.5"/><rect x="88" y="33" width="24" height="9" rx="2"/><rect x="81" y="44" width="38" height="16" rx="3"/></g>
-          <text x="100" y="116" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-weight="600" font-size="50" fill="url(#ysg)">YS</text>
-          <text x="100" y="152" text-anchor="middle" font-family="Parisienne, cursive" font-size="40" fill="url(#ysg)">Yannick</text>
-          <text x="100" y="171" text-anchor="middle" font-family="Jost, sans-serif" font-size="11" letter-spacing="6.5" fill="#cdb276">SCENTS</text>
-        </svg>
+        <div class="brand-logo" style="width:82px;height:82px;opacity:.9" role="img" aria-label="Werkamma"></div>
         <p class="est">Fine Fragrance House</p>
         <div class="links">
           <button onclick="App.t('Our concierge replies within the hour')">Concierge</button>
@@ -214,7 +197,7 @@
           <span class="dot">·</span>
           <button onclick="App.t('Free returns within 30 days')">Returns</button>
         </div>
-        <p class="copy">© 2026 YANNICK SCENTS — CRAFTED FOR THE FEW</p>
+        <p class="copy">© 2026 WERKAMMA — CRAFTED FOR THE FEW</p>
       </footer>
     </section>
 
@@ -295,7 +278,7 @@
       <div class="page-head"><p class="kicker">Your Profile</p><h1>Account</h1></div>
       <div class="card profile">
         <div class="prow2">
-          <div class="av" id="acctAv">YS</div>
+          <div class="av" id="acctAv">W</div>
           <div>
             <h2 id="acctName">Guest</h2>
             <p class="ph" id="acctHandle">Not signed in via Telegram</p>
@@ -327,9 +310,9 @@
           <span class="m-t">Payment methods<span class="m-s">Visa ·· 4242</span></span>
           <svg class="chev90" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9.5 6 6 6-6"/></svg>
         </button>
-        <button class="mrow" onclick="App.t('Code YS10 — valid on your next order')">
+        <button class="mrow" onclick="App.t('Code WK10 — valid on your next order')">
           <span class="m-ico"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="4"/><path d="M5.5 12v8.5h13V12"/><path d="M12 8v12.5"/><path d="M12 8c-1.5-4-7-3.5-5.5 0"/><path d="M12 8c1.5-4 7-3.5 5.5 0"/></svg></span>
-          <span class="m-t">Promotions<span class="m-s">YS10 · 10% off</span></span>
+          <span class="m-t">Promotions<span class="m-s">WK10 · 10% off</span></span>
           <svg class="chev90" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9.5 6 6 6-6"/></svg>
         </button>
         <button class="mrow" onclick="App.t('Connecting you to our concierge…')">
@@ -349,11 +332,11 @@
         </button>
         <button class="mrow" onclick="App.toggleAbout()">
           <span class="m-ico"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5v-9Z"/><path d="M3.5 7.5 12 12l8.5-4.5"/><path d="M12 12v9"/></svg></span>
-          <span class="m-t">About Yannick Scents</span>
+          <span class="m-t">About Werkamma</span>
           <svg id="aboutChev" class="chev90" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9.5 6 6 6-6"/></svg>
         </button>
         <div id="aboutBox" class="about-box hide">
-          Yannick Scents was founded on a single belief: a fragrance should be worn like jewellery — with intention.
+          Werkamma was founded on a single belief: a fragrance should be worn like jewellery — with intention.
           Every bottle is composed in Grasse, matured for months, and numbered by hand. We produce little, on purpose.
         </div>
         <button class="mrow" onclick="App.logout()">
@@ -451,22 +434,12 @@
 <!-- ============ TELEGRAM LOGIN GATE ============ -->
 <div id="gate" class="splash gate">
   <div class="scale-in gate-card">
-    <svg viewBox="0 0 200 200" width="104" height="104">
-      <circle cx="100" cy="100" r="93" fill="none" stroke="url(#ysg)" stroke-width="2.4"/>
-      <circle cx="100" cy="100" r="88" fill="none" stroke="url(#ysg)" stroke-width="0.8" opacity="0.5"/>
-      <g stroke="url(#ysg)" fill="none" stroke-width="2.4"><rect x="92" y="24" width="16" height="7" rx="1.5"/><rect x="88" y="33" width="24" height="9" rx="2"/><rect x="81" y="44" width="38" height="16" rx="3"/></g>
-      <text x="100" y="116" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-weight="600" font-size="50" fill="url(#ysg)">YS</text>
-      <text x="100" y="152" text-anchor="middle" font-family="Parisienne, cursive" font-size="40" fill="url(#ysg)">Yannick</text>
-      <line x1="58" y1="167" x2="78" y2="167" stroke="url(#ysg)" stroke-width="1" opacity="0.7"/>
-      <line x1="122" y1="167" x2="142" y2="167" stroke="url(#ysg)" stroke-width="1" opacity="0.7"/>
-      <text x="100" y="171" text-anchor="middle" font-family="Jost, sans-serif" font-size="11" letter-spacing="6.5" fill="#cdb276">SCENTS</text>
-      <path d="M52 146 C 44 166, 34 176, 16 184" stroke="url(#ysg)" stroke-width="1.3" fill="none" opacity="0.8"/>
-    </svg>
+    <div class="brand-logo" style="width:104px;height:104px" role="img" aria-label="Werkamma"></div>
     <p class="kicker" style="margin-top:18px">Fine Fragrance House</p>
     <h1 class="gate-title">Welcome. <span class="gold-text" style="font-style:italic">By invitation only.</span></h1>
 
     <div id="gateUser" class="gate-user" style="display:none">
-      <div class="av" id="gateAv">YS</div>
+      <div class="av" id="gateAv">W</div>
       <div>
         <h2 id="gateName">—</h2>
         <p class="ph" id="gateHandle">—</p>
@@ -485,25 +458,15 @@
 
 <div id="splash" class="splash">
   <div class="scale-in">
-    <svg viewBox="0 0 200 200" width="150" height="150">
-      <circle cx="100" cy="100" r="93" fill="none" stroke="url(#ysg)" stroke-width="2.4"/>
-      <circle cx="100" cy="100" r="88" fill="none" stroke="url(#ysg)" stroke-width="0.8" opacity="0.5"/>
-      <g stroke="url(#ysg)" fill="none" stroke-width="2.4"><rect x="92" y="24" width="16" height="7" rx="1.5"/><rect x="88" y="33" width="24" height="9" rx="2"/><rect x="81" y="44" width="38" height="16" rx="3"/></g>
-      <text x="100" y="116" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-weight="600" font-size="50" fill="url(#ysg)">YS</text>
-      <text x="100" y="152" text-anchor="middle" font-family="Parisienne, cursive" font-size="40" fill="url(#ysg)">Yannick</text>
-      <line x1="58" y1="167" x2="78" y2="167" stroke="url(#ysg)" stroke-width="1" opacity="0.7"/>
-      <line x1="122" y1="167" x2="142" y2="167" stroke="url(#ysg)" stroke-width="1" opacity="0.7"/>
-      <text x="100" y="171" text-anchor="middle" font-family="Jost, sans-serif" font-size="11" letter-spacing="6.5" fill="#cdb276">SCENTS</text>
-      <path d="M52 146 C 44 166, 34 176, 16 184" stroke="url(#ysg)" stroke-width="1.3" fill="none" opacity="0.8"/>
-    </svg>
+    <div class="brand-logo" style="width:150px;height:150px" role="img" aria-label="Werkamma"></div>
   </div>
-  <p class="script gold-text">Yannick Scents</p>
+  <p class="script gold-text">Werkamma</p>
   <p class="est">Fine Fragrance House</p>
 </div>
 
 <script>
 /* ============================================================
-   YANNICK SCENTS — app logic (vanilla JS)
+   WERKAMMA — app logic (vanilla JS)
    ============================================================ */
 
 /* ---------- telegram auth ---------- */
@@ -519,7 +482,7 @@ var ADMIN_IDS = [];
 function isOwner(){ return !!(tgUser && OWNER_IDS.indexOf(tgUser.id) !== -1); }
 
 /* Elegant inline placeholder shown if a product photo fails to load (missing/broken images/*.jpg) */
-var PLACEHOLDER_IMG = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNTAwIj4KPGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2Y1ZTFhNCIvPjxzdG9wIG9mZnNldD0iMC41IiBzdG9wLWNvbG9yPSIjYzlhMjI3Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOGE2ZDFmIi8+CjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0iIzBlMGMwOSIvPgo8ZyBzdHJva2U9InVybCgjZykiIHN0cm9rZS13aWR0aD0iMi40IiBmaWxsPSJub25lIj4KPHJlY3QgeD0iMTUyIiB5PSIxOTIiIHdpZHRoPSI5NiIgaGVpZ2h0PSIxODgiIHJ4PSIxNCIvPgo8cmVjdCB4PSIxNzIiIHk9IjE1MCIgd2lkdGg9IjU2IiBoZWlnaHQ9IjQ0IiByeD0iNiIvPgo8cmVjdCB4PSIxODIiIHk9IjEyMCIgd2lkdGg9IjM2IiBoZWlnaHQ9IjMyIiByeD0iNSIvPgo8bGluZSB4MT0iMTUyIiB5MT0iMjU4IiB4Mj0iMjQ4IiB5Mj0iMjU4IiBvcGFjaXR5PSIwLjUiLz4KPGxpbmUgeDE9IjE3MCIgeTE9IjMzMCIgeDI9IjIzMCIgeTI9IjMzMCIgb3BhY2l0eT0iMC4zNSIvPgo8L2c+Cjx0ZXh0IHg9IjIwMCIgeT0iNDI0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iR2VvcmdpYSwgc2VyaWYiIGZvbnQtd2VpZ2h0PSI2MDAiIGZvbnQtc2l6ZT0iMjYiIGZpbGw9InVybCgjZykiIGxldHRlci1zcGFjaW5nPSIzIj5ZUzwvdGV4dD4KPHRleHQgeD0iMjAwIiB5PSI0NTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgbGV0dGVyLXNwYWNpbmc9IjUiIGZpbGw9IiNjZGIyNzYiPllBTk5JQ0sgU0NFTlRTPC90ZXh0Pgo8L3N2Zz4=";
+var PLACEHOLDER_IMG = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNTAwIj4KPGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2Y1ZTFhNCIvPjxzdG9wIG9mZnNldD0iMC41IiBzdG9wLWNvbG9yPSIjYzlhMjI3Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOGE2ZDFmIi8+CjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0iIzBlMGMwOSIvPgo8ZyBzdHJva2U9InVybCgjZykiIHN0cm9rZS13aWR0aD0iMi40IiBmaWxsPSJub25lIj4KPHJlY3QgeD0iMTUyIiB5PSIxOTIiIHdpZHRoPSI5NiIgaGVpZ2h0PSIxODgiIHJ4PSIxNCIvPgo8cmVjdCB4PSIxNzIiIHk9IjE1MCIgd2lkdGg9IjU2IiBoZWlnaHQ9IjQ0IiByeD0iNiIvPgo8cmVjdCB4PSIxODIiIHk9IjEyMCIgd2lkdGg9IjM2IiBoZWlnaHQ9IjMyIiByeD0iNSIvPgo8bGluZSB4MT0iMTUyIiB5MT0iMjU4IiB4Mj0iMjQ4IiB5Mj0iMjU4IiBvcGFjaXR5PSIwLjUiLz4KPGxpbmUgeDE9IjE3MCIgeTE9IjMzMCIgeDI9IjIzMCIgeTI9IjMzMCIgb3BhY2l0eT0iMC4zNSIvPgo8L2c+Cjx0ZXh0IHg9IjIwMCIgeT0iNDI0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iR2VvcmdpYSwgc2VyaWYiIGZvbnQtd2VpZ2h0PSI2MDAiIGZvbnQtc2l6ZT0iMjYiIGZpbGw9InVybCgjZykiIGxldHRlci1zcGFjaW5nPSIzIj5XPC90ZXh0Pgo8dGV4dCB4PSIyMDAiIHk9IjQ1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBsZXR0ZXItc3BhY2luZz0iNSIgZmlsbD0iI2NkYjI3NiI+V0VSS0FNTUE8L3RleHQ+Cjwvc3ZnPg==";
 function phFallback(){ return ' onerror="this.onerror=null;this.src=\'' + PLACEHOLDER_IMG + '\';this.classList.add(\'ph-img\')"'; }
 function isAdmin(){ return !!(tgUser && ADMIN_IDS.indexOf(tgUser.id) !== -1); }
 function canManage(){ return isOwner() || isAdmin(); }
@@ -527,7 +490,7 @@ function canManage(){ return isOwner() || isAdmin(); }
 function initials(name){
   var parts = String(name || "").trim().split(/\s+/);
   var s = (parts[0] ? parts[0][0] : "") + (parts[1] ? parts[1][0] : "");
-  return (s || "YS").toUpperCase();
+  return (s || "WK").toUpperCase();
 }
 
 function paintAvatar(prefix, name, photoUrl){
@@ -559,7 +522,7 @@ function initTelegramAuth(){
     }
   }
   // Not opened inside Telegram, or no user data available
-  msg.textContent = "Open Yannick Scents from Telegram to sign in with your account.";
+  msg.textContent = "Open Werkamma from Telegram to sign in with your account.";
   label.textContent = "Continue with Telegram";
   foot.textContent = "This mini app runs inside the Telegram client.";
 }
@@ -609,7 +572,7 @@ var P = [
 
 var SIZES = {30:0.65, 50:1, 75:1.3, 100:1.55};
 var SAMPLE = 9, FREE = 150, STD = 9, EXP = 18;
-var PROMOS = { "YS10":0.1, "GOLD20":0.2 };
+var PROMOS = { "WK10":0.1, "GOLD20":0.2 };
 
 var REV_POOL = [
   { name:"Sofia M.", rating:5, date:"2 weeks ago", text:"The scent trail is silky — I get stopped to ask what I'm wearing. The bottle is a jewel in itself." },
@@ -934,7 +897,7 @@ function renderCart(){
   '<div class="card promo-box"><h4>Private code</h4>' +
     (promo
       ? '<div class="promo-on"><span>'+promo.code+' · −'+Math.round(promo.pct*100)+'%</span><button onclick="App.clearPromo()">'+ic('x',14)+'</button></div>'
-      : '<div class="promo-in"><input id="promoIn" class="field" placeholder="e.g. YS10"/><button class="btn btn-ghost" onclick="App.applyPromo()">Apply</button></div>') +
+      : '<div class="promo-in"><input id="promoIn" class="field" placeholder="e.g. WK10"/><button class="btn btn-ghost" onclick="App.applyPromo()">Apply</button></div>') +
   '</div>' +
   '<div class="card sum">' +
     '<div class="r"><span>Subtotal</span><span class="v">'+money(t.sub)+'</span></div>' +
@@ -1312,7 +1275,7 @@ function pay(){
     items.push({ name:byId(l.id).name, size:l.size, qty:l.qty, price:linePrice(byId(l.id),l.size,l.qty,l.sample) });
   }
   lastOrder = {
-    id: "YS-" + Math.floor(10000 + Math.random()*89999),
+    id: "WK-" + Math.floor(10000 + Math.random()*89999),
     date: new Date().toLocaleDateString("en-US", { month:"short", day:"numeric", year:"numeric" }),
     status: "Preparing",
     items: items,
@@ -1425,8 +1388,8 @@ var App = {
   quizBack: function(){ if (!quiz.step) return; quiz.step--; quiz.answers.pop(); renderQuiz(); },
   retake: function(){ quiz = { step:0, answers:[] }; renderQuiz(); },
   copyCode: function(){
-    if (navigator.clipboard) navigator.clipboard.writeText("YS10").catch(function(){});
-    toast("Code YS10 copied — see you at checkout");
+    if (navigator.clipboard) navigator.clipboard.writeText("WK10").catch(function(){});
+    toast("Code WK10 copied — see you at checkout");
   },
   newsletter: function(){
     var e = $("#nlInput").value;
@@ -1500,7 +1463,7 @@ var App = {
       rating: existing ? existing.rating : 5.0,
       reviews: existing ? existing.reviews : 0,
       stock: stock,
-      desc: $("#afDesc").value.trim() || "A new addition to the Yannick Scents collection.",
+      desc: $("#afDesc").value.trim() || "A new addition to the Werkamma collection.",
       intensity: Math.min(5, Math.max(1, parseInt($("#afIntensity").value, 10) || 3)),
       longevity: Math.min(5, Math.max(1, parseInt($("#afLongevity").value, 10) || 3))
     };
